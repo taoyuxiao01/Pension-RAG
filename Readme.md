@@ -1,9 +1,24 @@
 Markdown
-# Hakuba Rossi Star AI Steward (白馬 Rossi Star AIコンシェルジュ)
+# LangChainを用いた宿泊施設向けAIエージェント
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![Architecture](https://img.shields.io/badge/Architecture-Agent-blue)
 ![LLM](https://img.shields.io/badge/LLM-Qwen3.5-orange)
+
+## サマリー
+
+### プロジェクト概要
+- 本プロジェクトは、長野県白馬村のスキー民宿を想定し、多言語対応・時間認識機能を備えたAIコンシェルジュを提供する、実践的なAgentic RAG（エージェントベースの検索拡張生成）システムです。
+
+### 開発の背景
+- 本プロジェクトは、私の妻が白馬村の民宿でアシスタントとして働いていた際の実際の課題から生まれました。ゲストがチェックインする度に、民宿の注意事項や村内のバスの運行状況をゼロから説明する必要があり、多大な時間を費やしていました。この負担の大きいルーティンワークをAIで効率化・自動化できないかというアイデアから出発し、現場での主要な課題を解決するためのデモとして本システムを開発しました。
+
+### Agent構造図
+![alt text](./assets/Architecture_en.png)
+
+### デモ画面 (Demo)
+以下はシステムの実際の動作とエージェントの応答プロセスのデモです：
+![alt text](./assets/8d189c8d-d0dd-435f-8600-532fd19f0254.jpg)
 
 [English](#english) | [日本語](#日本語)
 
