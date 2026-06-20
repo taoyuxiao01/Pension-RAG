@@ -1,4 +1,6 @@
+import os
 import uuid
+
 from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import MemorySaver
@@ -7,12 +9,17 @@ from src.tools.rules import search_house_rules_vector_db
 from src.tools.shuttle_logic import find_best_shuttle
 from src.tools.weather import query_hakuba_weather
 
-OLLAMA_BASE_URL = "http://127.0.0.1:11434"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+OLLAMA_CHAT_MODEL = os.getenv("OLLAMA_CHAT_MODEL", "qwen3.5:9b-q4_K_M")
 
 def run_hakuba_agent():
     tools = [read_specific_appliance_manual, search_house_rules_vector_db, find_best_shuttle, query_hakuba_weather]
 
-    llm = ChatOllama(model="qwen3.5:9b-q4_K_M", temperature=0, base_url=OLLAMA_BASE_URL)
+    llm = ChatOllama(
+        model=OLLAMA_CHAT_MODEL,
+        temperature=0,
+        base_url=OLLAMA_BASE_URL,
+    )
 
     system_prompt = """你是一个白马（Hakuba）滑雪民宿的专业AI管家，你的任务是解答客人的问题。
     【回答风格要求】(极其重要)：

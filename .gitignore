@@ -1,9 +1,11 @@
 .venv/
+.env
+
+__pycache__/
+*.pyc
+
 data/raw_manuals/
 data/raw_rules/
 data/raw_transit_tables/
+
 src/ingestion/
-src/agent/__pycache__/
-src/tools/__pycache__/
-backend/__pycache__/
-.env

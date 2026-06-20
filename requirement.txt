@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-streamlit
-langchain
-langgrap
-pandas
-beautifulsoup4
-requests
-bs4
