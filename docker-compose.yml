@@ -58,7 +58,7 @@ services:
       - "8501"
     environment:
       - API_URL=http://backend:8000
-      - IMAGE_DISPLAY_WIDTH=96
+      - IMAGE_DISPLAY_WIDTH=48
     depends_on:
       - backend
     restart: unless-stopped

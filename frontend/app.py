@@ -1,3 +1,4 @@
+import base64
 import os
 import re
 import uuid
@@ -19,7 +20,7 @@ API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 FRONTEND_DIR = Path(__file__).resolve().parent
 IMAGE_DIR = FRONTEND_DIR / "assets"
-IMAGE_DISPLAY_WIDTH = int(os.getenv("IMAGE_DISPLAY_WIDTH", "96"))
+IMAGE_DISPLAY_WIDTH = int(os.getenv("IMAGE_DISPLAY_WIDTH", "48"))
 IMAGE_TAG_PATTERN = re.compile(
     r"`?\[(?:IMAGE|IMGAE)\s*[:：]\s*([^\]]+?)\]`?",
     flags=re.IGNORECASE,
@@ -43,27 +44,30 @@ def find_image_path(img_name: str) -> Path | None:
     )
 
 
-def render_message(text: str) -> None:
-    last_end = 0
-
-    for match in IMAGE_TAG_PATTERN.finditer(text):
-        before = text[last_end : match.start()]
-        if before.strip():
-            st.markdown(before)
-
+def render_inline_images(text: str) -> str:
+    def replacer(match):
         img_name = match.group(1)
         img_path = find_image_path(img_name)
 
         if img_path:
-            st.image(str(img_path), width=IMAGE_DISPLAY_WIDTH)
-        else:
-            st.markdown(f"`[IMAGE:{img_name.strip()}] not found`")
+            with open(img_path, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
 
-        last_end = match.end()
+            return (
+                f'<img src="data:image/png;base64,{encoded_string}" '
+                f'width="{IMAGE_DISPLAY_WIDTH}" '
+                f'style="width:{IMAGE_DISPLAY_WIDTH}px; max-width:{IMAGE_DISPLAY_WIDTH}px; '
+                f'height:auto; vertical-align:middle; margin:0 4px; '
+                f'border-radius:6px; display:inline-block;">'
+            )
 
-    remaining = text[last_end:]
-    if remaining.strip():
-        st.markdown(remaining)
+        return f"`[IMAGE:{img_name.strip()}] not found`"
+
+    return IMAGE_TAG_PATTERN.sub(replacer, text)
+
+
+def render_message(text: str) -> None:
+    st.markdown(render_inline_images(text), unsafe_allow_html=True)
 
 
 if "thread_id" not in st.session_state:
