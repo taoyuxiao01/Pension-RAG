@@ -19,6 +19,7 @@ API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 FRONTEND_DIR = Path(__file__).resolve().parent
 IMAGE_DIR = FRONTEND_DIR / "assets"
+IMAGE_DISPLAY_WIDTH = int(os.getenv("IMAGE_DISPLAY_WIDTH", "96"))
 IMAGE_TAG_PATTERN = re.compile(
     r"`?\[(?:IMAGE|IMGAE)\s*[:：]\s*([^\]]+?)\]`?",
     flags=re.IGNORECASE,
@@ -54,7 +55,7 @@ def render_message(text: str) -> None:
         img_path = find_image_path(img_name)
 
         if img_path:
-            st.image(str(img_path))
+            st.image(str(img_path), width=IMAGE_DISPLAY_WIDTH)
         else:
             st.markdown(f"`[IMAGE:{img_name.strip()}] not found`")
 
