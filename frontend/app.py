@@ -1,4 +1,3 @@
-import base64
 import os
 import re
 import uuid
@@ -20,25 +19,50 @@ API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 FRONTEND_DIR = Path(__file__).resolve().parent
 IMAGE_DIR = FRONTEND_DIR / "assets"
+IMAGE_TAG_PATTERN = re.compile(
+    r"`?\[(?:IMAGE|IMGAE)\s*[:：]\s*([^\]]+?)\]`?",
+    flags=re.IGNORECASE,
+)
 
 
-def render_images(text: str) -> str:
-    def replacer(match):
-        img_name = match.group(1).strip()
-        img_path = IMAGE_DIR / f"{img_name}.png"
+def find_image_path(img_name: str) -> Path | None:
+    clean_name = img_name.strip().strip("`")
+    img_path = IMAGE_DIR / f"{clean_name}.png"
 
-        if img_path.exists():
-            with open(img_path, "rb") as image_file:
-                encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+    if img_path.exists():
+        return img_path
 
-            return (
-                f'<img src="data:image/png;base64,{encoded_string}" '
-                f'style="max-width:100%; border-radius:10px; margin:8px 0;">'
-            )
+    return next(
+        (
+            asset
+            for asset in IMAGE_DIR.glob("*.png")
+            if asset.stem.lower() == clean_name.lower()
+        ),
+        None,
+    )
 
-        return f"`[IMAGE:{img_name}] not found`"
 
-    return re.sub(r"\[IMAGE:(.*?)\]", replacer, text)
+def render_message(text: str) -> None:
+    last_end = 0
+
+    for match in IMAGE_TAG_PATTERN.finditer(text):
+        before = text[last_end : match.start()]
+        if before.strip():
+            st.markdown(before)
+
+        img_name = match.group(1)
+        img_path = find_image_path(img_name)
+
+        if img_path:
+            st.image(str(img_path))
+        else:
+            st.markdown(f"`[IMAGE:{img_name.strip()}] not found`")
+
+        last_end = match.end()
+
+    remaining = text[last_end:]
+    if remaining.strip():
+        st.markdown(remaining)
 
 
 if "thread_id" not in st.session_state:
@@ -58,7 +82,7 @@ if "messages" not in st.session_state:
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.markdown(render_images(msg["content"]), unsafe_allow_html=True)
+        render_message(msg["content"])
 
 
 if user_input := st.chat_input("Please input your question:"):
@@ -86,7 +110,7 @@ if user_input := st.chat_input("Please input your question:"):
                 response.raise_for_status()
                 final_answer = response.json()["answer"]
 
-                st.markdown(render_images(final_answer), unsafe_allow_html=True)
+                render_message(final_answer)
 
                 st.session_state.messages.append(
                     {

@@ -14,7 +14,7 @@
 
 1. **开机** ： 按下电源键[IMAGE:washmachine_btn_power]开启机器。
 2. **放洗涤剂** ： 直接将洗涤剂/洗涤球丢入洗衣机滚筒当中。
-3. **确认模式** ：开机默认即为标准模式，请确认标准模式指示灯[IMGAE:washmachine_mode_standard]处于点亮状态。如果没有点亮请按下电源键[IMAGE:washmachine_btn_power]关闭机器重新启动。
+3. **确认模式** ：开机默认即为标准模式，请确认标准模式指示灯[IMAGE:washmachine_mode_standard]处于点亮状态。如果没有点亮请按下电源键[IMAGE:washmachine_btn_power]关闭机器重新启动。
 4. **选择模式** ：通过客人需求是否是仅洗涤或者洗涤并烘干，指导客人按下洗涤模式键[IMAGE:washmachine_btn_wash]或者洗涤烘干模式键[IMAGE:washmachine_btn_wash_and_dry]进行模式选择。
 5. **启动** ：按下启动/暂停键[IMAGE:washmachine_btn_start],机器开始自动称重并注水。
 
